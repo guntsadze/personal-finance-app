@@ -83,12 +83,12 @@ export default function RegisterPage() {
               {...register("password")}
             />
 
-            <PasswordInput
+            {/* <PasswordInput
               label="Confirm Password"
               placeholder="Repeat your password"
               error={errors.confirmPassword?.message}
               {...register("confirmPassword")}
-            />
+            /> */}
 
             {errors.root && (
               <p className="text-preset-5 text-red">{errors.root.message}</p>
