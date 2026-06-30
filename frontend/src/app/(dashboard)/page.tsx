@@ -14,7 +14,10 @@ import type { RecurringBill } from "@/types/recurring-bill";
 
 function groupBills(bills: RecurringBill[], status: RecurringBill["status"]) {
   const matching = bills.filter((b) => b.status === status);
-  return { count: matching.length, total: matching.reduce((s, b) => s + b.amount, 0) };
+  return {
+    count: matching.length,
+    total: matching.reduce((s, b) => s + b.amount, 0),
+  };
 }
 
 export default function OverviewPage() {
@@ -42,10 +45,7 @@ export default function OverviewPage() {
 
   if (error) {
     return (
-      <ErrorMessage
-        message="Couldn't load overview data."
-        onRetry={refetch}
-      />
+      <ErrorMessage message="Couldn't load overview data." onRetry={refetch} />
     );
   }
 
@@ -61,7 +61,11 @@ export default function OverviewPage() {
 
       {/* Summary stats */}
       <div className="flex flex-col sm:flex-row gap-200">
-        <SummaryStatCard label="Current Balance" amount={data.currentBalance} variant="hero" />
+        <SummaryStatCard
+          label="Current Balance"
+          amount={data.currentBalance}
+          variant="hero"
+        />
         <SummaryStatCard label="Income" amount={data.totalIncome} />
         <SummaryStatCard label="Expenses" amount={data.totalExpenses} />
       </div>

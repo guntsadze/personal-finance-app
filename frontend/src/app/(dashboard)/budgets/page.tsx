@@ -2,7 +2,11 @@
 
 import { useState } from "react";
 import { useBudgets } from "@/hooks/use-budgets";
-import { createBudget, updateBudget, deleteBudget } from "@/services/budgets.service";
+import {
+  createBudget,
+  updateBudget,
+  deleteBudget,
+} from "@/services/budgets.service";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { ErrorMessage } from "@/components/ui/ErrorMessage";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -25,11 +29,13 @@ export default function BudgetsPage() {
   async function handleSubmit(values: BudgetFormValues) {
     try {
       if (editTarget) {
-        await updateBudget(editTarget.id, values);
+        await updateBudget(editTarget._id, values);
       } else {
         await createBudget(values);
       }
-    } catch { /* backend not live yet */ }
+    } catch {
+      /* backend not live yet */
+    }
     setFormOpen(false);
     setEditTarget(null);
     refetch();
@@ -37,7 +43,11 @@ export default function BudgetsPage() {
 
   async function handleDelete() {
     if (!deleteTarget) return;
-    try { await deleteBudget(deleteTarget.id); } catch { /* backend not live yet */ }
+    try {
+      await deleteBudget(deleteTarget._id);
+    } catch {
+      /* backend not live yet */
+    }
     setDeleteTarget(null);
     refetch();
   }
@@ -74,14 +84,23 @@ export default function BudgetsPage() {
       <PageHeader
         title="Budgets"
         action={
-          <Button variant="primary" onClick={() => { setEditTarget(null); setFormOpen(true); }}>
+          <Button
+            variant="primary"
+            onClick={() => {
+              setEditTarget(null);
+              setFormOpen(true);
+            }}
+          >
             + Add New Budget
           </Button>
         }
       />
 
       {budgets.length === 0 ? (
-        <EmptyState message="No budgets yet." description="Add a budget to start tracking your spending." />
+        <EmptyState
+          message="No budgets yet."
+          description="Add a budget to start tracking your spending."
+        />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-300 items-start">
           {/* Left — donut summary */}
@@ -91,7 +110,7 @@ export default function BudgetsPage() {
           <div className="flex flex-col gap-300">
             {budgets.map((budget) => (
               <BudgetCategoryCard
-                key={budget.id}
+                key={budget._id}
                 budget={budget}
                 onEdit={() => openEdit(budget)}
                 onDelete={() => setDeleteTarget(budget)}
@@ -106,12 +125,23 @@ export default function BudgetsPage() {
         mode={editTarget ? "edit" : "add"}
         initialValues={
           editTarget
-            ? { category: editTarget.category, maximum: editTarget.maximum, color: editTarget.color }
+            ? {
+                category: editTarget.category,
+                maximum: editTarget.maximum,
+                color: editTarget.color,
+              }
             : undefined
         }
-        usedColors={editTarget ? usedColors.filter((c) => c !== editTarget.color) : usedColors}
+        usedColors={
+          editTarget
+            ? usedColors.filter((c) => c !== editTarget.color)
+            : usedColors
+        }
         onSubmit={handleSubmit}
-        onClose={() => { setFormOpen(false); setEditTarget(null); }}
+        onClose={() => {
+          setFormOpen(false);
+          setEditTarget(null);
+        }}
       />
 
       <DeleteConfirmationModal

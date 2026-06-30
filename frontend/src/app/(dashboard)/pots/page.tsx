@@ -24,19 +24,26 @@ export default function PotsPage() {
   async function handleSubmit(values: PotFormValues) {
     try {
       if (editTarget) {
-        await updatePot(editTarget.id, values);
+        await updatePot(editTarget._id, values);
       } else {
         await createPot(values);
       }
-    } catch { /* backend not live yet */ }
+    } catch {
+      /* backend not live yet */
+    }
     setFormOpen(false);
     setEditTarget(null);
     refetch();
   }
 
   async function handleDelete() {
+    console.log("🚀 ~ handleDelete ~ deleteTarget:", deleteTarget);
     if (!deleteTarget) return;
-    try { await deletePot(deleteTarget.id); } catch { /* backend not live yet */ }
+    try {
+      await deletePot(deleteTarget._id);
+    } catch {
+      /* backend not live yet */
+    }
     setDeleteTarget(null);
     refetch();
   }
@@ -70,24 +77,37 @@ export default function PotsPage() {
       <PageHeader
         title="Pots"
         action={
-          <Button variant="primary" onClick={() => { setEditTarget(null); setFormOpen(true); }}>
+          <Button
+            variant="primary"
+            onClick={() => {
+              setEditTarget(null);
+              setFormOpen(true);
+            }}
+          >
             + Add New Pot
           </Button>
         }
       />
 
       {pots.length === 0 ? (
-        <EmptyState message="No pots yet." description="Create a pot to start saving toward a goal." />
+        <EmptyState
+          message="No pots yet."
+          description="Create a pot to start saving toward a goal."
+        />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-300">
           {pots.map((pot) => (
             <PotCard
-              key={pot.id}
+              key={pot._id}
               pot={pot}
               onEdit={() => openEdit(pot)}
               onDelete={() => setDeleteTarget(pot)}
-              onAddMoney={() => {/* TODO: Add Money modal */}}
-              onWithdraw={() => {/* TODO: Withdraw modal */}}
+              onAddMoney={() => {
+                /* TODO: Add Money modal */
+              }}
+              onWithdraw={() => {
+                /* TODO: Withdraw modal */
+              }}
             />
           ))}
         </div>
@@ -98,12 +118,23 @@ export default function PotsPage() {
         mode={editTarget ? "edit" : "add"}
         initialValues={
           editTarget
-            ? { name: editTarget.name, target: editTarget.target, color: editTarget.color }
+            ? {
+                name: editTarget.name,
+                target: editTarget.target,
+                color: editTarget.color,
+              }
             : undefined
         }
-        usedColors={editTarget ? usedColors.filter((c) => c !== editTarget.color) : usedColors}
+        usedColors={
+          editTarget
+            ? usedColors.filter((c) => c !== editTarget.color)
+            : usedColors
+        }
         onSubmit={handleSubmit}
-        onClose={() => { setFormOpen(false); setEditTarget(null); }}
+        onClose={() => {
+          setFormOpen(false);
+          setEditTarget(null);
+        }}
       />
 
       <DeleteConfirmationModal

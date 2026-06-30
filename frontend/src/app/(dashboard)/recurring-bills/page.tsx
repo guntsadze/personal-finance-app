@@ -12,16 +12,28 @@ import { formatCurrency } from "@/lib/format-currency";
 import { Receipt } from "lucide-react";
 import type { RecurringBill } from "@/types/recurring-bill";
 
-const SORT_OPTIONS = ["Latest", "Oldest", "A to Z", "Z to A", "Highest", "Lowest"];
+const SORT_OPTIONS = [
+  "Latest",
+  "Oldest",
+  "A to Z",
+  "Z to A",
+  "Highest",
+  "Lowest",
+];
 
 function sortBills(list: RecurringBill[], sort: string): RecurringBill[] {
   const copy = [...list];
   switch (sort) {
-    case "A to Z":  return copy.sort((a, b) => a.name.localeCompare(b.name));
-    case "Z to A":  return copy.sort((a, b) => b.name.localeCompare(a.name));
-    case "Highest": return copy.sort((a, b) => b.amount - a.amount);
-    case "Lowest":  return copy.sort((a, b) => a.amount - b.amount);
-    default:        return copy;
+    case "A to Z":
+      return copy.sort((a, b) => a.name.localeCompare(b.name));
+    case "Z to A":
+      return copy.sort((a, b) => b.name.localeCompare(a.name));
+    case "Highest":
+      return copy.sort((a, b) => b.amount - a.amount);
+    case "Lowest":
+      return copy.sort((a, b) => a.amount - b.amount);
+    default:
+      return copy;
   }
 }
 
@@ -33,15 +45,27 @@ export default function RecurringBillsPage() {
 
   const bills = data ?? [];
 
-  const paid     = useMemo(() => bills.filter((b) => b.status === "paid"),     [bills]);
-  const upcoming = useMemo(() => bills.filter((b) => b.status === "upcoming"), [bills]);
-  const dueSoon  = useMemo(() => bills.filter((b) => b.status === "due-soon"), [bills]);
+  const paid = useMemo(() => bills.filter((b) => b.status === "paid"), [bills]);
+  const upcoming = useMemo(
+    () => bills.filter((b) => b.status === "upcoming"),
+    [bills],
+  );
+  const dueSoon = useMemo(
+    () => bills.filter((b) => b.status === "due-soon"),
+    [bills],
+  );
 
-  const totalBills = useMemo(() => bills.reduce((s, b) => s + b.amount, 0), [bills]);
+  const totalBills = useMemo(
+    () => bills.reduce((s, b) => s + b.amount, 0),
+    [bills],
+  );
 
   const filtered = useMemo(() => {
     let list = bills;
-    if (search) list = list.filter((b) => b.name.toLowerCase().includes(search.toLowerCase()));
+    if (search)
+      list = list.filter((b) =>
+        b.name.toLowerCase().includes(search.toLowerCase()),
+      );
     return sortBills(list, sort);
   }, [bills, search, sort]);
 
@@ -61,7 +85,12 @@ export default function RecurringBillsPage() {
   }
 
   if (error) {
-    return <ErrorMessage message="Couldn't load recurring bills." onRetry={refetch} />;
+    return (
+      <ErrorMessage
+        message="Couldn't load recurring bills."
+        onRetry={refetch}
+      />
+    );
   }
 
   return (
@@ -76,7 +105,9 @@ export default function RecurringBillsPage() {
             <Receipt size={32} className="text-white" />
             <div>
               <p className="text-preset-4 text-white/70 mb-100">Total Bills</p>
-              <p className="text-preset-1 text-white">{formatCurrency(totalBills)}</p>
+              <p className="text-preset-1 text-white">
+                {formatCurrency(totalBills)}
+              </p>
             </div>
           </div>
 
@@ -86,19 +117,24 @@ export default function RecurringBillsPage() {
             <div className="flex items-center justify-between py-150 border-b border-grey-100">
               <span className="text-preset-4 text-grey-500">Paid Bills</span>
               <span className="text-preset-4-bold text-grey-900">
-                {paid.length} ({formatCurrency(paid.reduce((s, b) => s + b.amount, 0))})
+                {paid.length} (
+                {formatCurrency(paid.reduce((s, b) => s + b.amount, 0))})
               </span>
             </div>
             <div className="flex items-center justify-between py-150 border-b border-grey-100">
-              <span className="text-preset-4 text-grey-500">Total Upcoming</span>
+              <span className="text-preset-4 text-grey-500">
+                Total Upcoming
+              </span>
               <span className="text-preset-4-bold text-grey-900">
-                {upcoming.length} ({formatCurrency(upcoming.reduce((s, b) => s + b.amount, 0))})
+                {upcoming.length} (
+                {formatCurrency(upcoming.reduce((s, b) => s + b.amount, 0))})
               </span>
             </div>
             <div className="flex items-center justify-between py-150">
               <span className="text-preset-4 text-red">Due Soon</span>
               <span className="text-preset-4-bold text-red">
-                {dueSoon.length} ({formatCurrency(dueSoon.reduce((s, b) => s + b.amount, 0))})
+                {dueSoon.length} (
+                {formatCurrency(dueSoon.reduce((s, b) => s + b.amount, 0))})
               </span>
             </div>
           </div>
@@ -119,7 +155,9 @@ export default function RecurringBillsPage() {
           <div className="hidden sm:grid grid-cols-[1fr_auto_auto] gap-200 pb-100 border-b border-grey-100">
             <span className="text-preset-5 text-grey-500">Bill Title</span>
             <span className="text-preset-5 text-grey-500">Due Date</span>
-            <span className="text-preset-5 text-grey-500 text-right">Amount</span>
+            <span className="text-preset-5 text-grey-500 text-right">
+              Amount
+            </span>
           </div>
 
           {filtered.length === 0 ? (

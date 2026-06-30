@@ -32,6 +32,8 @@ export async function login(payload: LoginPayload): Promise<AuthResponse> {
       secure: true,
       sameSite: "strict",
     });
+
+    window.location.href = "/";
   }
 
   return data;
@@ -44,6 +46,11 @@ export async function register(
     "/auth/register",
     payload,
   );
+
+  if (data) {
+    window.location.href = "/login";
+  }
+
   return data;
 }
 

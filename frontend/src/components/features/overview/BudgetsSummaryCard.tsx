@@ -11,7 +11,10 @@ interface BudgetsSummaryCardProps {
   onSeeDetails?: () => void;
 }
 
-export function BudgetsSummaryCard({ budgets, onSeeDetails }: BudgetsSummaryCardProps) {
+export function BudgetsSummaryCard({
+  budgets,
+  onSeeDetails,
+}: BudgetsSummaryCardProps) {
   const totalSpent = budgets.reduce((s, b) => s + b.spent, 0);
   const totalLimit = budgets.reduce((s, b) => s + b.maximum, 0);
 
@@ -55,7 +58,9 @@ export function BudgetsSummaryCard({ budgets, onSeeDetails }: BudgetsSummaryCard
           </ResponsiveContainer>
           {/* Center label */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <span className="text-preset-1 text-grey-900">{formatCurrency(totalSpent)}</span>
+            <span className="text-preset-1 text-grey-900">
+              {formatCurrency(totalSpent)}
+            </span>
             <span className="text-preset-5 text-grey-500">
               of {formatCurrency(totalLimit)} limit
             </span>
@@ -65,10 +70,15 @@ export function BudgetsSummaryCard({ budgets, onSeeDetails }: BudgetsSummaryCard
         {/* Legend */}
         <div className="flex flex-col gap-200 flex-1 min-w-0">
           {budgets.map((b) => (
-            <div key={b.id} className="flex items-center justify-between gap-100">
+            <div
+              key={b._id}
+              className="flex items-center justify-between gap-100"
+            >
               <div className="flex items-center gap-100 min-w-0">
                 <ColorDot color={b.color} size="md" />
-                <span className="text-preset-5 text-grey-500 truncate">{b.category}</span>
+                <span className="text-preset-5 text-grey-500 truncate">
+                  {b.category}
+                </span>
               </div>
               <span className="text-preset-5-bold text-grey-900 shrink-0">
                 {formatCurrency(b.spent)}

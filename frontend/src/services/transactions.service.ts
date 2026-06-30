@@ -1,4 +1,5 @@
 import { apiClient } from "@/services/api-client";
+import { PaginatedResponse } from "@/types/Pagination";
 import type { Transaction } from "@/types/transaction";
 
 export interface TransactionPayload {
@@ -10,8 +11,9 @@ export interface TransactionPayload {
 }
 
 export async function getTransactions(): Promise<Transaction[]> {
-  const { data } = await apiClient.get<Transaction[]>("/transactions");
-  return data;
+  const { data } =
+    await apiClient.get<PaginatedResponse<Transaction>>("/transactions");
+  return data.data ?? [];
 }
 
 export async function getTransaction(id: string): Promise<Transaction> {
@@ -19,16 +21,21 @@ export async function getTransaction(id: string): Promise<Transaction> {
   return data;
 }
 
-export async function createTransaction(payload: TransactionPayload): Promise<Transaction> {
+export async function createTransaction(
+  payload: TransactionPayload,
+): Promise<Transaction> {
   const { data } = await apiClient.post<Transaction>("/transactions", payload);
   return data;
 }
 
 export async function updateTransaction(
   id: string,
-  payload: Partial<TransactionPayload>
+  payload: Partial<TransactionPayload>,
 ): Promise<Transaction> {
-  const { data } = await apiClient.put<Transaction>(`/transactions/${id}`, payload);
+  const { data } = await apiClient.put<Transaction>(
+    `/transactions/${id}`,
+    payload,
+  );
   return data;
 }
 
