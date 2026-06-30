@@ -1,4 +1,5 @@
 import { apiClient } from "@/services/api-client";
+import Cookies from "js-cookie";
 
 export interface LoginPayload {
   email: string;
@@ -12,8 +13,8 @@ export interface RegisterPayload {
 }
 
 export interface AuthResponse {
-  token: string;
-  user: { id: string; name: string; email: string };
+  accessToken: string;
+  // user: { id: string; name: string; email: string };
 }
 
 export interface MeResponse {
@@ -24,16 +25,35 @@ export interface MeResponse {
 
 export async function login(payload: LoginPayload): Promise<AuthResponse> {
   const { data } = await apiClient.post<AuthResponse>("/auth/login", payload);
+
+  if (data && data.accessToken) {
+    Cookies.set("token", data.accessToken, {
+      expires: 7,
+      secure: true,
+      sameSite: "strict",
+    });
+  }
+
   return data;
 }
 
-export async function register(payload: RegisterPayload): Promise<AuthResponse> {
-  const { data } = await apiClient.post<AuthResponse>("/auth/register", payload);
+export async function register(
+  payload: RegisterPayload,
+): Promise<AuthResponse> {
+  const { data } = await apiClient.post<AuthResponse>(
+    "/auth/register",
+    payload,
+  );
   return data;
 }
+
+// export async function logout(): Promise<void> {
+//   await apiClient.post("/auth/logout");
+// }
 
 export async function logout(): Promise<void> {
-  await apiClient.post("/auth/logout");
+  Cookies.remove("token");
+  window.location.href = "/login";
 }
 
 export async function getMe(): Promise<MeResponse> {
